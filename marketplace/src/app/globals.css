@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: oklch(98.5% 0.004 265);
+  --foreground: oklch(22% 0.012 265);
+  --muted: oklch(95.5% 0.006 265);
+  --muted-foreground: oklch(48% 0.012 265);
+  --border: oklch(89% 0.008 265);
+  --card: oklch(99.5% 0.003 265);
+  --card-foreground: oklch(22% 0.012 265);
+  --primary: oklch(48% 0.15 260);
+  --primary-foreground: oklch(98% 0.006 260);
+  --secondary: oklch(94.5% 0.008 265);
+  --secondary-foreground: oklch(25% 0.012 265);
+  --accent: oklch(92% 0.025 260);
+  --accent-foreground: oklch(30% 0.06 260);
+  --destructive: oklch(58% 0.2 25);
+  --destructive-foreground: oklch(98% 0.006 25);
+  --ring: oklch(55% 0.16 260);
+  --sidebar: oklch(96.5% 0.007 265);
+  --sidebar-hover: oklch(92.5% 0.01 265);
+  --overlay: oklch(18% 0.012 265 / 48%);
+}
+
+.dark {
+  --background: oklch(16% 0.012 265);
+  --foreground: oklch(93% 0.008 265);
+  --muted: oklch(24% 0.012 265);
+  --muted-foreground: oklch(68% 0.012 265);
+  --border: oklch(30% 0.012 265);
+  --card: oklch(20% 0.012 265);
+  --card-foreground: oklch(93% 0.008 265);
+  --primary: oklch(70% 0.13 260);
+  --primary-foreground: oklch(17% 0.016 260);
+  --secondary: oklch(25% 0.012 265);
+  --secondary-foreground: oklch(90% 0.008 265);
+  --accent: oklch(29% 0.03 260);
+  --accent-foreground: oklch(88% 0.04 260);
+  --destructive: oklch(66% 0.17 25);
+  --destructive-foreground: oklch(18% 0.02 25);
+  --ring: oklch(72% 0.12 260);
+  --sidebar: oklch(19% 0.013 265);
+  --sidebar-hover: oklch(25% 0.014 265);
+  --overlay: oklch(8% 0.01 265 / 72%);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-overlay: var(--overlay);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
