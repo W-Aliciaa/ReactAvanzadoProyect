@@ -1,33 +1,35 @@
-import { ProjectDto } from "@/lib/projects.types";
+import { AdDto } from "@/lib/ad.types";
 import Link from "next/link";
 import { LikeButton } from "./like-button";
 
-export function ProjectCard({
-  project,
+export function AdCard({
+  ad,
   hideTitle = false,
 }: {
-  project: ProjectDto;
+  ad: AdDto;
   hideTitle?: boolean;
 }) {
   return (
     <article className="rounded-lg border border-gray-200 p-4">
       {!hideTitle && (
         <h2 className="text-lg font-bold">
-          <Link href={`/dashboard/projects/${project.id}`}>
-            {project.title}
+          <Link href={`/ads/${ad.id}`}>
+            {ad.title}
           </Link>
         </h2>
       )}
       {process.env.NODE_ENV === "development" && (
         <p className="text-xs text-muted-foreground">
-          Proyecto #{project.id} · owner {project.ownerId ?? "legacy"}
+          Anuncio #{ad.id} · owner {ad.ownerId ?? "legacy"}
         </p>
       )}
-      <p className="text-sm text-gray-500">{project.description}</p>
+      <p className="text-sm font-bold">{ad.price} €</p>
+      <p className="text-sm text-gray-500">{ad.description}</p>
+      <p className="text-xs text-gray-400 mt-1">Tags: {ad.tags.join(", ")}</p>
       <p className="text-sm text-gray-500">
-        {project.createdAt.toLocaleDateString()}
+        {ad.createdAt.toLocaleDateString()}
       </p>
-      <LikeButton projectId={project.id} likes={project.likes} />
+      <LikeButton adId={ad.id} likes={ad.likes} />
     </article>
   );
 }

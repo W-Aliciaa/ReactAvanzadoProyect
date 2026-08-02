@@ -6,7 +6,7 @@ vi.mock("@/lib/auth", () => ({
 
 vi.mock("@/lib/prisma", () => ({
   default: {
-    project: {
+    ad: {
       findUnique: vi.fn(),
       update: vi.fn(),
     },
@@ -20,50 +20,54 @@ vi.mock("next/cache", () => ({
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { updateProjectTitle } from "../actions";
+import { updateAdTitle } from "../actions";
 
 const sessionMock = vi.mocked(getSession);
-const findUniqueMock = vi.mocked(prisma.project.findUnique);
-const updateMock = vi.mocked(prisma.project.update);
+const findUniqueMock = vi.mocked(prisma.ad.findUnique);
+const updateMock = vi.mocked(prisma.ad.update);
 const revalidatePathMock = vi.mocked(revalidatePath);
 
-describe("updateProjectTitle ownership", () => {
+describe("updateAdTitle ownership", () => {
   beforeEach(() => {
     sessionMock.mockResolvedValue({ userId: 11 });
   });
 
-  it("rejects another owner's project without updating or revalidating", async () => {
+  it("rejects another owner's ad without updating or revalidating", async () => {
     findUniqueMock.mockResolvedValue({
       id: 7,
-      title: "Proyecto ajeno",
+      title: "Anuncio ajeno",
       description: "Fixture de ownership",
+      price: 50.0,
+      tags: ["test"],
       likes: 0,
       createdAt: new Date(),
       ownerId: 22,
     });
 
-    const result = await updateProjectTitle("7", "Nuevo título");
+    const result = await updateAdTitle("7", "Nuevo título");
 
     expect(result).toEqual({
       ok: false,
       code: 403,
-      message: "No tienes permiso para editar este proyecto.",
+      message: "No tienes permiso para editar este anuncio.",
     });
     expect(updateMock).not.toHaveBeenCalled();
     expect(revalidatePathMock).not.toHaveBeenCalled();
   });
 
-  it("updates the owner's project and revalidates list and detail", async () => {
+  it("updates the owner's ad and revalidates list and detail", async () => {
     findUniqueMock.mockResolvedValue({
       id: 7,
-      title: "Proyecto propio",
+      title: "Anuncio propio",
       description: "Fixture de ownership",
+      price: 100.0, 
+      tags: ["propio"],
       likes: 0,
       createdAt: new Date(),
       ownerId: 11,
     });
 
-    const result = await updateProjectTitle("7", "  Título actualizado  ");
+    const result = await updateAdTitle("7", "  Título actualizado  ");
 
     expect(result).toEqual({
       ok: true,
@@ -74,7 +78,7 @@ describe("updateProjectTitle ownership", () => {
       where: { id: 7 },
       data: { title: "Título actualizado" },
     });
-    expect(revalidatePathMock).toHaveBeenCalledWith("/dashboard");
-    expect(revalidatePathMock).toHaveBeenCalledWith("/dashboard/projects/7");
+    expect(revalidatePathMock).toHaveBeenCalledWith("/");
+    expect(revalidatePathMock).toHaveBeenCalledWith("/ads/7");
   });
 });

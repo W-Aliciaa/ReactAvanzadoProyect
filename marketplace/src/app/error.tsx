@@ -10,7 +10,7 @@ type DashboardErrorProps = {
 
 export default function DashboardError({ error, reset }: DashboardErrorProps) {
   useEffect(() => {
-    console.error("Dashboard render failed", { digest: error.digest });
+    console.error("Home render failed", { digest: error.digest });
   }, [error]);
 
   return (
@@ -19,7 +19,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
         Error inesperado
       </p>
       <h1 className="text-3xl font-semibold tracking-tight">
-        No pudimos mostrar esta parte del dashboard
+        No pudimos mostrar esta parte del home
       </h1>
       <p className="text-muted-foreground">
         Puedes reintentar el render o volver a una zona estable.
@@ -34,9 +34,9 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
         </button>
         <Link
           className="rounded-lg border border-border px-4 py-2"
-          href="/dashboard"
+          href="/"
         >
-          Volver al dashboard
+          Volver al home
         </Link>
       </div>
     </section>

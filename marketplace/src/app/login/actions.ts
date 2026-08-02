@@ -6,8 +6,8 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 function safeDashboardPath(value: FormDataEntryValue | null): string {
-  if (typeof value !== "string") return "/dashboard";
-  return /^\/dashboard(?:[/?#]|$)/.test(value) ? value : "/dashboard";
+  if (typeof value !== "string") return "/";
+  return /^\/(?:[/?#]|$)/.test(value) ? value : "/";
 }
 
 export async function startDemoSession(formData: FormData): Promise<void> {

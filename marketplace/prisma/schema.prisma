@@ -12,10 +12,12 @@ datasource db {
   provider = "postgresql"
 }
 
-model Project {
+model Ad {
   id          Int      @id @default(autoincrement())
   title       String
   description String
+  price       Float
+  tags        String[]
   likes       Int      @default(0)
   createdAt   DateTime @default(now())
   ownerId     Int?
@@ -25,14 +27,14 @@ model Project {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
   displayName String
-  createdAt   DateTime  @default(now())
-  projects    Project[]
+  createdAt   DateTime @default(now())
+  ads         Ad[]
 }
 
-model ProjectStat {
+model AdStat {
   id           Int      @id @default(autoincrement())
   closedIssues Int      @default(0)
   openIssues   Int      @default(0)

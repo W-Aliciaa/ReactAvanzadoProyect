@@ -3,36 +3,42 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth";
-import { parseProjectId } from "@/lib/project-query";
-import { projectSchema, projectTitleSchema } from "./project-schema";
+import { parseAdId } from "@/lib/ad-query";
+import { adSchema, adTitleSchema } from "./ad-schema";
 import { z } from "zod";
+import { redirect } from "next/navigation";
 
-export type ProjectActionState = {
+
+export type AdActionState = {
   status: "idle" | "error" | "success";
   message: string;
   fieldErrors: {
     title?: string[];
     description?: string[];
+    price?: string[];
+    tags?: string[];
   };
 };
 
-export async function createProject(
-  _previousState: ProjectActionState,
+export async function createAd(
+  _previousState: AdActionState,
   formData: FormData,
-): Promise<ProjectActionState> {
+): Promise<AdActionState> {
   const session = await getSession();
 
   if (!session) {
     return {
       status: "error",
-      message: "Necesitas una sesión válida para crear un proyecto.",
+      message: "Necesitas una sesión válida para crear un anuncio.",
       fieldErrors: {},
     };
   }
 
-  const parsed = projectSchema.safeParse({
+  const parsed = adSchema.safeParse({
     title: formData.get("title"),
     description: formData.get("description"),
+    price: formData.get("price"),
+    tags: formData.get("tags"),
   });
 
   if (!parsed.success) {
@@ -43,7 +49,7 @@ export async function createProject(
     };
   }
 
-  await prisma.project.create({
+  await prisma.ad.create({
     data: {
       ...parsed.data,
       likes: 0,
@@ -51,96 +57,92 @@ export async function createProject(
     },
   });
 
-  revalidatePath("/dashboard");
+  revalidatePath("/");
 
-  return {
-    status: "success",
-    message: "Proyecto creado",
-    fieldErrors: {},
-  };
+  redirect("/");
 }
 
-export type LikeProjectResult =
+export type LikeAdResult =
   | { ok: true }
   | { ok: false; code: 400 | 401 | 404; message: string };
 
-export async function likeProject(
-  projectId: number,
-): Promise<LikeProjectResult> {
+export async function likeAd(
+  adId: number,
+): Promise<LikeAdResult> {
   const session = await getSession();
 
   if (!session) {
     return { ok: false, code: 401, message: "Necesitas una sesión válida." };
   }
 
-  if (!Number.isSafeInteger(projectId) || projectId <= 0) {
+  if (!Number.isSafeInteger(adId) || adId <= 0) {
     return { ok: false, code: 400, message: "El ID no es válido." };
   }
 
-  const project = await prisma.project.findUnique({
-    where: { id: projectId },
+  const ad = await prisma.ad.findUnique({
+    where: { id: adId },
     select: { id: true },
   });
 
-  if (!project) {
-    return { ok: false, code: 404, message: "El proyecto no existe." };
+  if (!ad) {
+    return { ok: false, code: 404, message: "El anuncio no existe." };
   }
 
-  await prisma.project.update({
-    where: { id: project.id },
+  await prisma.ad.update({
+    where: { id: ad.id },
     data: { likes: { increment: 1 } },
   });
 
-  revalidatePath("/dashboard");
-  revalidatePath(`/dashboard/projects/${project.id}`);
+  revalidatePath("/");
+  revalidatePath(`/ads/${ad.id}`);
   return { ok: true };
 }
 
-export type UpdateProjectTitleResult =
+export type UpdateAdTitleResult =
   | { ok: true; title: string; message: string }
   | { ok: false; code: 400 | 401 | 403 | 404; message: string };
 
-export async function updateProjectTitle(
-  projectIdInput: string,
+export async function updateAdTitle(
+  adIdInput: string,
   titleInput: string,
-): Promise<UpdateProjectTitleResult> {
+): Promise<UpdateAdTitleResult> {
   const session = await getSession();
 
   if (!session) {
     return { ok: false, code: 401, message: "Necesitas una sesión válida." };
   }
 
-  const projectId = parseProjectId(projectIdInput);
-  const title = projectTitleSchema.safeParse(titleInput);
+  const adId = parseAdId(adIdInput);
+  const title = adTitleSchema.safeParse(titleInput);
 
-  if (projectId === null || !title.success) {
+  if (adId === null || !title.success) {
     return { ok: false, code: 400, message: "Revisa el ID y el título." };
   }
 
-  const project = await prisma.project.findUnique({
-    where: { id: projectId },
+  const ad = await prisma.ad.findUnique({
+    where: { id: adId },
     select: { id: true, ownerId: true },
   });
 
-  if (!project) {
-    return { ok: false, code: 404, message: "El proyecto no existe." };
+  if (!ad) {
+    return { ok: false, code: 404, message: "El anuncio no existe." };
   }
 
-  if (project.ownerId !== session.userId) {
+  if (ad.ownerId !== session.userId) {
     return {
       ok: false,
       code: 403,
-      message: "No tienes permiso para editar este proyecto.",
+      message: "No tienes permiso para editar este anuncio.",
     };
   }
 
-  await prisma.project.update({
-    where: { id: project.id },
+  await prisma.ad.update({
+    where: { id: ad.id },
     data: { title: title.data },
   });
 
-  revalidatePath("/dashboard");
-  revalidatePath(`/dashboard/projects/${project.id}`);
+  revalidatePath("/");
+  revalidatePath(`/ads/${ad.id}`);
 
   return { ok: true, title: title.data, message: "Título actualizado." };
 }

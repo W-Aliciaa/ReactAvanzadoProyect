@@ -1,7 +1,7 @@
-import { ProjectCard } from "@/app/components/project-card";
+import { AdCard } from "@/app/components/ad-card";
 import { OptimisticTitleEditor } from "@/app/components/optimistic-title-editor";
-import { parseProjectId } from "@/lib/project-query";
-import { getProjectById } from "@/lib/projects";
+import { parseAdId } from "@/lib/ad-query";
+import { getAdById } from "@/lib/ads";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -12,57 +12,57 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const projectId = parseProjectId(id);
+  const adId = parseAdId(id);
 
-  if (projectId === null) {
+  if (adId === null) {
     notFound();
   }
 
-  const projectDetail = await getProjectById(projectId);
+  const adDetail = await getAdById(adId);
 
-  if (!projectDetail) {
+  if (!adDetail) {
     notFound();
   }
 
   return {
-    title: projectDetail.title,
-    description: projectDetail.description,
+    title: adDetail.title,
+    description: adDetail.description,
   };
 }
 
-export default async function ProjectDetailPage({
+export default async function AdDetailPage({
   params,
   searchParams,
 }: Props) {
   const { id } = await params;
-  const projectId = parseProjectId(id);
+  const adId = parseAdId(id);
   const query = await searchParams;
 
   if (
     process.env.NODE_ENV === "development" &&
     query.demoError === "1"
   ) {
-    throw new Error("Controlled project detail failure");
+    throw new Error("Controlled ad detail failure");
   }
 
-  if (projectId === null) {
+  if (adId === null) {
     notFound();
   }
 
-  const projectDetail = await getProjectById(projectId);
+  const adDetail = await getAdById(adId);
 
-  if (!projectDetail) {
+  if (!adDetail) {
     notFound();
   }
 
   return (
     <section className="grid gap-6">
       <OptimisticTitleEditor
-        confirmedTitle={projectDetail.title}
+        confirmedTitle={adDetail.title}
         labMode={process.env.NODE_ENV === "development"}
-        projectId={projectDetail.id}
+        adId={adDetail.id}
       />
-      <ProjectCard hideTitle project={projectDetail} />
+      <AdCard hideTitle ad={adDetail} />
     </section>
   );
 }

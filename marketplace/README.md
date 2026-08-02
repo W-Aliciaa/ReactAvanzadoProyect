@@ -38,7 +38,7 @@ npm run typecheck
 npm run build
 ```
 
-El E2E usa el fixture A de Ana, renombra su proyecto y lo restaura desde un
+El E2E usa el fixture A de Ana, renombra su anuncio y lo restaura desde un
 teardown directo aunque falle una aserción. Consulta `docs/testing-production.md`
 para las fronteras de cada capa y el flujo de CI/deploy.
 

@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE "Project" ADD COLUMN     "ownerId" INTEGER;
+ALTER TABLE "Ad" ADD COLUMN "ownerId" INTEGER;
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -7,15 +7,15 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "displayName" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "User" ("email");
 
 -- CreateIndex
-CREATE INDEX "Project_ownerId_idx" ON "Project"("ownerId");
+CREATE INDEX "Ad_ownerId_idx" ON "Ad" ("ownerId");
 
 -- AddForeignKey
-ALTER TABLE "Project" ADD CONSTRAINT "Project_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Ad"
+ADD CONSTRAINT "Ad_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE;

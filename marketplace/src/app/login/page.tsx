@@ -6,7 +6,7 @@ type LoginPageProps = {
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { from = "/dashboard" } = await searchParams;
+  const { from = "/" } = await searchParams;
 
   return (
     <main className="mx-auto grid min-h-[70vh] max-w-2xl place-content-center gap-8 px-6 py-12">
@@ -34,7 +34,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             >
               <span className="font-semibold">Entrar como {user.displayName}</span>
               <span className="text-sm text-muted-foreground">
-                Fixture {key}, con proyecto propio
+                Fixture {key}, con anuncio propio
               </span>
             </button>
           </form>

@@ -3,13 +3,13 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { SearchProjectForm } from "./search-project-form";
-import { projectListHref } from "@/lib/project-query";
+import { SearchAdForm } from "./search-ad-form";
+import { adListHref } from "@/lib/ad-query";
 
-describe("SearchProjectForm", () => {
+describe("SearchAdForm", () => {
   it("exposes accessible controls and the GET form contract", async () => {
     const user = userEvent.setup();
-    render(<SearchProjectForm query="old" order="desc" />);
+    render(<SearchAdForm query="old" order="desc" />);
 
     const query = screen.getByRole("textbox", { name: "Buscar" });
     const order = screen.getByRole("combobox", {
@@ -22,7 +22,7 @@ describe("SearchProjectForm", () => {
     }
 
     expect(form).toHaveAttribute("method", "GET");
-    expect(form).toHaveAttribute("action", "/dashboard");
+    expect(form).toHaveAttribute("action", "/");
     expect(query).toHaveValue("old");
     expect(order).toHaveValue("desc");
 
@@ -36,13 +36,13 @@ describe("SearchProjectForm", () => {
     expect(data.get("page")).toBeNull();
     expect(screen.getByRole("link", { name: "Limpiar" })).toHaveAttribute(
       "href",
-      "/dashboard",
+      "/",
     );
   });
 
   it("keeps URL filtering rules in the same public contract", () => {
     expect(
-      projectListHref({ query: "react", order: "desc", page: 2 }, 3),
-    ).toBe("/dashboard?query=react&page=3");
+      adListHref({ query: "react", order: "desc", page: 2 }, 3),
+    ).toBe("/?query=react&page=3");
   });
 });

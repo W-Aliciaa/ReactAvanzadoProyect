@@ -1,6 +1,6 @@
 import { useFormStatus } from "react-dom";
 
-export function CreateProjectButton() {
+export function CreateAdButton() {
   const { pending } = useFormStatus();
 
   return (

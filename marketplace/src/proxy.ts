@@ -2,6 +2,13 @@ import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth-token";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function proxy(request: NextRequest) {
+
+  const pathname = request.nextUrl.pathname;
+
+  // Permitir acceso a la pagina de inicio y al login
+  if (pathname === "/" || pathname.startsWith("/login")) {
+    return NextResponse.next();
+  }
   const token = request.cookies.get(SESSION_COOKIE)?.value;
 
   if (token) {
@@ -22,5 +29,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/dashboard/:path*",
+  matcher: [
+    /* Excluir rutas de api, login y archivos estáticos del bucle de redirección */
+    "/((?!^$|^/$|api|login|_next/static|_next/image|favicon.ico).*)",
+  ],
 };

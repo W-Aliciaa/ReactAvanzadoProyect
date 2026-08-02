@@ -15,11 +15,11 @@ const prisma = new PrismaClient({
 });
 const FIXTURE_DESCRIPTION = "Laboratorio de seguridad";
 
-async function ensureDemoProject(
+async function ensureDemoAd(
   ownerId: number,
   title: string,
 ): Promise<number> {
-  const existing = await prisma.project.findFirst({
+  const existing = await prisma.ad.findFirst({
     where: {
       OR: [
         { ownerId, description: FIXTURE_DESCRIPTION },
@@ -30,11 +30,13 @@ async function ensureDemoProject(
   });
 
   if (existing) {
-    await prisma.project.update({
+    await prisma.ad.update({
       where: { id: existing.id },
       data: {
         title,
         description: FIXTURE_DESCRIPTION,
+        price: 99.99,
+        tags: ["demo", "laboratorio"],
         likes: 0,
         ownerId,
       },
@@ -42,23 +44,25 @@ async function ensureDemoProject(
     return existing.id;
   }
 
-  const project = await prisma.project.create({
+  const ad = await prisma.ad.create({
     data: {
       title,
       description: FIXTURE_DESCRIPTION,
+      price: 99.99,
+      tags: ["demo", "laboratorio"],
       ownerId,
     },
     select: { id: true },
   });
 
-  return project.id;
+  return ad.id;
 }
 
 async function main() {
   const fixtures: Array<{
     key: keyof typeof DEMO_USERS;
     userId: number;
-    projectId: number;
+    adId: number;
   }> = [];
 
   for (const key of Object.keys(DEMO_USERS) as Array<keyof typeof DEMO_USERS>) {
@@ -72,9 +76,9 @@ async function main() {
       },
       select: { id: true },
     });
-    const projectId = await ensureDemoProject(user.id, definition.projectTitle);
+    const adId = await ensureDemoAd(user.id, definition.adTitle);
 
-    fixtures.push({ key, userId: user.id, projectId });
+    fixtures.push({ key, userId: user.id, adId });
   }
 
   console.table(fixtures);

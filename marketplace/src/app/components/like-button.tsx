@@ -1,15 +1,15 @@
 "use client";
 
 import { useOptimistic, useState, useTransition } from "react";
-import { likeProject } from "../dashboard/actions";
+import { likeAd } from "../actions";
 
 type LikeButtonProps = {
-  projectId: number;
+  adId: number;
   likes: number;
 };
 
 export function LikeButton({
-  projectId,
+  adId,
   likes: initialLikes,
 }: LikeButtonProps) {
   const [isPending, startTransition] = useTransition();
@@ -27,7 +27,7 @@ export function LikeButton({
           setMessage("");
           startTransition(async () => {
             addOptimisticLike(1);
-            const result = await likeProject(projectId);
+            const result = await likeAd(adId);
 
             if (!result.ok) {
               setMessage(`${result.code}: ${result.message}`);

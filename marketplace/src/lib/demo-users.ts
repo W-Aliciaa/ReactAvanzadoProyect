@@ -2,12 +2,12 @@ export const DEMO_USERS = {
   A: {
     email: "ana@example.test",
     displayName: "Ana",
-    projectTitle: "Proyecto de Ana",
+    adTitle: "Anuncio de Ana",
   },
   B: {
     email: "pepe@example.test",
     displayName: "Pepe",
-    projectTitle: "Proyecto de Pepe",
+    adTitle: "Anuncio de Pepe",
   },
 } as const;
 

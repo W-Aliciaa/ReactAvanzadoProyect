@@ -1,21 +1,21 @@
 "use client";
 
-import { updateProjectTitle } from "@/app/dashboard/actions";
+import { updateAdTitle } from "@/app/actions";
 import { FormEvent, useOptimistic, useState, useTransition } from "react";
 
 type OptimisticTitleEditorProps = {
-  projectId: number;
+  adId: number;
   confirmedTitle: string;
   labMode: boolean;
 };
 
 export function OptimisticTitleEditor({
-  projectId,
+  adId,
   confirmedTitle,
   labMode,
 }: OptimisticTitleEditorProps) {
   const [draft, setDraft] = useState(confirmedTitle);
-  const [targetId, setTargetId] = useState(String(projectId));
+  const [targetId, setTargetId] = useState(String(adId));
   const [message, setMessage] = useState("");
   const [optimisticTitle, setOptimisticTitle] =
     useOptimistic(confirmedTitle);
@@ -24,12 +24,12 @@ export function OptimisticTitleEditor({
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const attemptedTitle = draft;
-    const attemptedId = labMode ? targetId : String(projectId);
+    const attemptedId = labMode ? targetId : String(adId);
     setMessage("");
 
     startTransition(async () => {
       setOptimisticTitle(attemptedTitle);
-      const result = await updateProjectTitle(attemptedId, attemptedTitle);
+      const result = await updateAdTitle(attemptedId, attemptedTitle);
       setMessage(
         result.ok ? result.message : `${result.code}: ${result.message}`,
       );
@@ -43,26 +43,26 @@ export function OptimisticTitleEditor({
   }
 
   return (
-    <section className="grid gap-4" aria-labelledby="project-title">
+    <section className="grid gap-4" aria-labelledby="ad-title">
       <div className="grid gap-1">
         {labMode && (
           <p className="text-sm font-medium text-red-600">
             Laboratorio local: el ID objetivo es controlable
           </p>
         )}
-        <h1 id="project-title" className="text-3xl font-semibold tracking-tight">
+        <h1 id="ad-title" className="text-3xl font-semibold tracking-tight">
           {optimisticTitle}
         </h1>
       </div>
 
       <form className="grid max-w-xl gap-3" onSubmit={handleSubmit}>
         {labMode && (
-          <label className="grid gap-1 text-sm" htmlFor="target-project-id">
+          <label className="grid gap-1 text-sm" htmlFor="target-ad-id">
             ID objetivo del laboratorio
             <input
               className="rounded-lg border border-border bg-background px-3 py-2"
               disabled={isPending}
-              id="target-project-id"
+              id="target-ad-id"
               inputMode="numeric"
               onChange={(event) => setTargetId(event.target.value)}
               value={targetId}
@@ -70,12 +70,12 @@ export function OptimisticTitleEditor({
           </label>
         )}
 
-        <label className="grid gap-1 text-sm" htmlFor="project-title-input">
+        <label className="grid gap-1 text-sm" htmlFor="ad-title-input">
           Nuevo título
           <input
             className="rounded-lg border border-border bg-background px-3 py-2"
             disabled={isPending}
-            id="project-title-input"
+            id="ad-title-input"
             maxLength={80}
             minLength={3}
             onChange={(event) => setDraft(event.target.value)}

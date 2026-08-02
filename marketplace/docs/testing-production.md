@@ -2,8 +2,8 @@
 
 ## Capas
 
-- **Unit/action:** Vitest importa `createProject` y `updateProjectTitle` como funciones. Auth, Prisma y revalidación se mockean; Zod permanece real. Esto prueba decisiones y efectos llamados, no cookies ni una base real.
-- **Componente:** Testing Library ejecuta `SearchProjectForm` en `jsdom`. Las aserciones usan roles, labels, `FormData` y el contrato GET público.
+- **Unit/action:** Vitest importa `createAd` y `updateAdTitle` como funciones. Auth, Prisma y revalidación se mockean; Zod permanece real. Esto prueba decisiones y efectos llamados, no cookies ni una base real.
+- **Componente:** Testing Library ejecuta `SearchAdForm` en `jsdom`. Las aserciones usan roles, labels, `FormData` y el contrato GET público.
 - **E2E:** Playwright usa Chromium, el servidor de desarrollo y la sesión A/B local. El fixture A se resuelve por datos sembrados y el título se restaura en `finally`.
 
 No se duplica cada aserción en todas las capas. Cada test cubre la frontera que puede observar.

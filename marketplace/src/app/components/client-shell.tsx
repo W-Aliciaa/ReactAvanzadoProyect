@@ -11,7 +11,7 @@ interface ClientShellProps {
 
 const navigation = [
   { href: "/", label: "Inicio", icon: "home" },
-  { href: "/dashboard", label: "Proyectos", icon: "projects" },
+  { href: "/ads", label: "Anuncios", icon: "ads" },
 ] as const;
 
 function NavIcon({ icon }: { icon: (typeof navigation)[number]["icon"] }) {

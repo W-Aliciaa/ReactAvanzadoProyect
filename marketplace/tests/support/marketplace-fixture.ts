@@ -16,12 +16,12 @@ const prisma = new PrismaClient({
 
 const FIXTURE_DESCRIPTION = "Laboratorio de seguridad";
 
-export type ProjectFixture = {
-  projectId: number;
+export type AdFixture = {
+  adId: number;
   originalTitle: string;
 };
 
-export async function getAnaFixture(): Promise<ProjectFixture> {
+export async function getAnaFixture(): Promise<AdFixture> {
   const ana = await prisma.user.findUnique({
     where: { email: DEMO_USERS.A.email },
     select: { id: true },
@@ -31,7 +31,7 @@ export async function getAnaFixture(): Promise<ProjectFixture> {
     throw new Error("Run npm run db:seed before starting Playwright");
   }
 
-  const project = await prisma.project.findFirst({
+  const ad = await prisma.ad.findFirst({
     where: {
       ownerId: ana.id,
       description: FIXTURE_DESCRIPTION,
@@ -40,18 +40,18 @@ export async function getAnaFixture(): Promise<ProjectFixture> {
     select: { id: true, title: true },
   });
 
-  if (!project) {
+  if (!ad) {
     throw new Error("Fixture A is missing; run npm run db:seed");
   }
 
-  return { projectId: project.id, originalTitle: project.title };
+  return { adId: ad.id, originalTitle: ad.title };
 }
 
-export async function restoreProjectTitle(
-  fixture: ProjectFixture,
+export async function restoreAdTitle(
+  fixture: AdFixture,
 ): Promise<void> {
-  await prisma.project.update({
-    where: { id: fixture.projectId },
+  await prisma.ad.update({
+    where: { id: fixture.adId },
     data: { title: fixture.originalTitle },
   });
 }

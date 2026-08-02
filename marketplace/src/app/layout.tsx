@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: "Marketplace",
     template: "%s | Marketplace",
   },
-  description: "Marketplace de proyectos del laboratorio Next.js",
+  description: "Marketplace de anuncios del laboratorio Next.js",
 };
 
 export default function RootLayout({
